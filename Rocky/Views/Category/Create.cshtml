@@ -2,6 +2,7 @@
 
 <form method="POST" asp-action="Create">
     <div class="border p-3">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div> @*section 3-1 server-side validation*@
         <div class="form-group row">
             <h2 class="text-info pl-3">Add Category</h2>
         </div>
@@ -13,6 +14,7 @@
                     </div>
                     <div class="col-8">
                         <input asp-for="Name" class="form-control"/>
+                        <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
 
                 </div>
@@ -23,7 +25,7 @@
                     </div>
                     <div class="col-8">
                         <input asp-for="DisplayOrder" class="form-control" />
-
+                        <span asp-validation-for="DisplayOrder" class="text-danger"></span>
                     </div>
 
                 </div>
@@ -34,7 +36,9 @@
                             <input type="submit" value="Create" class="btn btn-info w-100" />
                         </div>
                         <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100">Back</a>
+                            <a asp-action="Index" class="btn btn-success w-100">
+                                <i class="fas fa-sign-out-alt"></i> Back
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -45,3 +49,8 @@
         </div>
     </div>
 </form>
+
+@*client side validation*@
+@section Scripts {
+    @{ <partial name="_ValidationScriptsPartial" />}
+}
