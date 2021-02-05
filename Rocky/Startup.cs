@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +41,14 @@ namespace Rocky
                 Options.Cookie.HttpOnly = true;
                 Options.Cookie.IsEssential = true;
             });
-            // below this method, activate the session with app.UseSession();
+            // and then, below this METHOD, activate the session with app.UseSession();
+
+            // Identity activation (section 6-1)
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddDefaultTokenProviders().AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDbContext>(); // this line will make change to our database tables, will add Identity tables
+            // below the METHOD, active the Authentication
+
             services.AddControllersWithViews();
         }
 
@@ -62,12 +70,15 @@ namespace Rocky
 
             app.UseRouting();
 
+            app.UseAuthentication(); // activation of Identity, make sure that this line will come before Authorization!!!
+
             app.UseAuthorization();
 
             app.UseSession(); // session 
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapRazorPages(); // Because Identity uses Razor pages instead of MVC 
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
