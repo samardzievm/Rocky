@@ -31,6 +31,16 @@ namespace Rocky
                         Configuration.GetConnectionString("DefaultConnection")
                     )
             );
+
+            // adding session for the shopping cart - section 5-8
+            services.AddHttpContextAccessor();
+            services.AddSession(Options =>
+            {
+                Options.IdleTimeout = TimeSpan.FromMinutes(10); // let the session lasts 10 minutes
+                Options.Cookie.HttpOnly = true;
+                Options.Cookie.IsEssential = true;
+            });
+            // below this method, activate the session with app.UseSession();
             services.AddControllersWithViews();
         }
 
@@ -53,6 +63,8 @@ namespace Rocky
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession(); // session 
 
             app.UseEndpoints(endpoints =>
             {
